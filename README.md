@@ -258,6 +258,39 @@ String keyword = request.getParameter("keyword");
 String page = request.getParameter("page");
 ```
 
+### 5-6. HTTP Client
+```java
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.ContentResponse;
+import org.eclipse.jetty.client.util.StringContentProvider;
+import org.elcipse.jetty.http.HttpMehod;
+
+String url = modelInfo.get("url").getAsString();
+String prompt = promptRoot
+				.getAsJsonObject(modelName)
+				.getAsJsonObject(promptName)
+				.get("PROMPT")
+				.getAsString();
+
+HttpClient httpClient = new HttpClient();
+
+try {
+	httpClient.start();
+
+	ContentResponse response = httpClient
+								.newRequest(url)
+								.method(HttpMethod.POST)
+								.content(new StringContentProvider(prompt), "text/plain")
+								.send();
+
+	JsonObject responseJson = JsonParser
+								.parseString(response.getContentAsString())
+								.getAsJsonObject();
+} finally {
+	httpClient.stop();
+}
+```
+
 ---
 
 ## 6. 시간/날짜 처리 패턴
