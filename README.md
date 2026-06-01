@@ -291,6 +291,28 @@ try {
 }
 ```
 
+```java
+  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+  conn.setConnectTimeout(3000);   // 연결 타임아웃 3초
+  conn.setReadTimeout(5000);      // 읽기 타임아웃 5초
+
+  5-B-6. (참고) Java 11+ HttpClient — 더 간결
+
+  import java.net.http.*;
+  import java.net.URI;
+
+  HttpClient client = HttpClient.newHttpClient();
+  HttpRequest req = HttpRequest.newBuilder()
+          .uri(URI.create("http://localhost:8080/monitoring"))
+          .header("Content-Type", "application/json")
+          .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
+          .build();
+
+  HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
+  System.out.println(resp.statusCode());   // 200
+  System.out.println(resp.body());         // 응답 JSON
+```
+
 ---
 
 ## 6. 시간/날짜 처리 패턴
